@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Sudoku
+Comment= Sexy Sudoku
+Terminal=false
+Type=Application
+Categories=Development;Education
+Exec=/home/adminbk/Desktop/Programming/python/Sudoku/main.py
+Icon=/home/adminbk/Desktop/Programming/python/Sudoku/sudoku.png

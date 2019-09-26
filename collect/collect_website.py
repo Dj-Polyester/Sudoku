@@ -3,8 +3,12 @@ from selenium import webdriver
 import parser
 import time
 from multi_dim_array import MultiDimArray
+import sys
+import os
+import subprocess
 
 #choose a number that can be divided four, in case there is equal distribution in the difficulty of puzzles
+FILE_PATH="/home/adminbk/Desktop/Programming/python/Sudoku/logs/"
 NUMBER_OF_THREADS=8
 threads = []
 
@@ -41,9 +45,12 @@ def work(lock,difficulty):
 	#get sudoku from the website
 	table_array=parser.get_sudoku(table,driver,thread_name)
 	
-	#save the sudoku
+	#save the sudoku and lock the thread
 	lock.acquire()
 	save_sudoku(table_array,lock,difficulty)
+	
+	cmd="../collect/firstLine.sh ../logs/"+dif_keyword+".log"
+	os.system(cmd)
 	lock.release()
 	print(thread_name+" done.")
 
@@ -52,12 +59,10 @@ def work(lock,difficulty):
 
 def save_sudoku(table_array,lock,difficulty):
 	dif_keyword=translate_difficulty(difficulty)
-	with open("{}.log".format(dif_keyword),"a+") as fileName:
+	with open("{}.log".format(FILE_PATH+dif_keyword),"a+") as fileName:
 		print(file=fileName)
 		print("#{}".format(time.ctime()),file=fileName)
 		parser.printToFile(table_array,9,9,fileName)
-
-create_workers()
 
 def translate_difficulty(difficulty):
 	if difficulty==1: dif_keyword="easy"
@@ -69,11 +74,14 @@ def translate_difficulty(difficulty):
 		exit(1)
 	return dif_keyword
 
-# for t in threads:
-#     t.join()
 
-# Inline version
-[t.join() for t in threads]
+if __name__=="__main__":
+	create_workers()
 
-print("main thread exited")
+	# for t in threads:
+	#     t.join()
+	
+	# Inline version
+	[t.join() for t in threads]
+	print("{} main thread exited".format(sys.argv[0]))	
 
