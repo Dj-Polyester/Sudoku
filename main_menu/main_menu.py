@@ -11,9 +11,14 @@ import os
 from clickable import clickable
 
 class Ui_MainWindow(object):
+    
+    def __init__(self,diff):
+        self.diff_keyword=diff
+    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow") 
         MainWindow.resize(472, 422)
+        self.MainWindow=MainWindow
         
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -46,6 +51,7 @@ class Ui_MainWindow(object):
         font.setPointSize(16)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
+        self.label_2.setText(self.diff_keyword)
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setGeometry(QtCore.QRect(20, 350, 120, 31))
         font = QtGui.QFont()
@@ -75,21 +81,30 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.horizontalSlider.valueChanged.connect(self.chng_diff)
+        self.pushButton_2.clicked.connect(self.start_sudoku)
         self.pushButton_3.clicked.connect(self.quit_main_menu)
         self.pushButton_4.clicked.connect(self.collect_data)
     
+    
+
     def get_help(self):
         print("clicked")
 
     def chng_diff(self):
         diff=self.horizontalSlider.value()
         
-        if diff==0: diff_keyword="easy" 
-        elif diff==1: diff_keyword="medium"
-        elif diff==2: diff_keyword="hard"
-        else: diff_keyword="evil"
+        if diff==0: self.diff_keyword="easy" 
+        elif diff==1: self.diff_keyword="medium"
+        elif diff==2: self.diff_keyword="hard"
+        else: self.diff_keyword="evil"
 
-        self.label_2.setText(diff_keyword)
+        self.label_2.setText(self.diff_keyword)
+    
+    def start_sudoku(self):
+        self.MainWindow.close()
+        os.system("python3 ../sudoku_menu/sudoku_start.py "+self.diff_keyword)
+
+
 
     def quit_main_menu(self):
         QtCore.QCoreApplication.instance().quit()
@@ -107,4 +122,3 @@ class Ui_MainWindow(object):
         self.pushButton_3.setText(_translate("MainWindow", "Quit"))
         self.label_2.setText(_translate("MainWindow", "Easy"))
         self.pushButton_4.setText(_translate("MainWindow", "Collect data"))
-        #self.label_3.setText(_translate("MainWindow", "Help"))

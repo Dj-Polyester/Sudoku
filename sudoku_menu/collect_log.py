@@ -45,3 +45,4 @@ def getSudokuLog(filename):
     sudoku=convertToSudoku(tmp)
     return sudoku
 
+
