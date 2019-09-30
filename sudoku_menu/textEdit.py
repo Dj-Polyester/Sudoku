@@ -12,6 +12,9 @@ class textEdit(QtWidgets.QTextEdit):
         self.edit = QtWidgets.QTextEdit(self.centralwidget)
         self.edit.setGeometry(QtCore.QRect(self.start+self.i*self.width, self.width+self.j*self.width, self.width, self.width))
         self.edit.setObjectName("textEdit_"+str(self.j*9+self.i))
+        # this calls self.fitText when text changes
+        # and self.fitText changes text and thus gets called again
+        # so we need to block signals in self.fitText
         self.edit.textChanged.connect(self.fitText)   
         
     
@@ -24,5 +27,10 @@ class textEdit(QtWidgets.QTextEdit):
             print(text)
         if len(text) > 1:
             text=text[:1]
+
+        # block signals to prevent RecursionError
+        self.edit.blockSignals(True)
         #set to the specified element
         self.edit.setPlainText(text)
+        # return to previous state
+        self.edit.blockSignals(False)
